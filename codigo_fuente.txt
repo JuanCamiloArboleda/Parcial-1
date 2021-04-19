@@ -1,0 +1,45 @@
+const int SER = 2;	//ENTRADA SERIAL
+const int RCLK = 4;	//RELOJ REGISTRO DESPLAZAMIENTO
+const int SRCLK = 5;  //REGISTRO DE SALIDA
+
+//funcion que recibe 4 variables tipo int, la primera el valor que se le dara a cada led y las siguientes los puertos analogos del arduino
+void subida_flanco(int numero, int serial ,int reloj,int registro);
+
+void setup()
+{
+  //configuracion de puertos digitales de forma: OUTPUT
+  pinMode(SER, OUTPUT);
+  pinMode(RCLK, OUTPUT);
+  pinMode(SRCLK, OUTPUT);
+  
+  //inicializar la entrada serial y los relojes en bajo
+  digitalWrite(SER, 0);
+  digitalWrite(RCLK, 0);
+  digitalWrite(SRCLK, 0);
+  
+  for(int i = 1; i<=16; i++)
+  {
+    subida_flanco(i,SER,RCLK,SRCLK);    
+  } 
+}
+
+void loop()
+{   
+  
+}
+
+void subida_flanco(int numero, int serial ,int reloj,int registro)
+{
+  digitalWrite(serial, numero);//se le da el valor para al serial el cual pasara el numero 
+  
+  digitalWrite(registro, 0);//falta pro explicar
+  digitalWrite(registro, 1);
+  digitalWrite(registro, 0);
+  
+  digitalWrite(reloj, 0);//falta por explicar
+  digitalWrite(reloj, 1);
+  digitalWrite(reloj, 0);
+  
+  delay(500);
+  
+}
