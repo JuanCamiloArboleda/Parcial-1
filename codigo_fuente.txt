@@ -2,11 +2,23 @@ const int SER = 2;	//ENTRADA SERIAL
 const int RCLK = 4;	//RELOJ REGISTRO DESPLAZAMIENTO
 const int SRCLK = 5;  //REGISTRO DE SALIDA
 
+int matriz[8][8]={{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0}};
+
+
 //funcion que recibe 4 variables tipo int, la primera el valor que se le dara a cada led y las siguientes los puertos analogos del arduino
-void subida_flanco(int numero, int serial ,int reloj,int registro);
+void Verificacion(int numero, int serial ,int reloj,int registro);
+
+//funcion que muestra la matriz
+void MostrarMatriz(int m[8][8],int nfilas,int ncolumnas);
+
+void letraA(int m[8][8]);
+
+void recorrer(int m[8][8]);
 
 void setup()
 {
+  Serial.begin(9600);
+  
   //configuracion de puertos digitales de forma: OUTPUT
   pinMode(SER, OUTPUT);
   pinMode(RCLK, OUTPUT);
@@ -16,11 +28,19 @@ void setup()
   digitalWrite(SER, 0);
   digitalWrite(RCLK, 0);
   digitalWrite(SRCLK, 0);
-  
-  for(int i = 1; i<=16; i++)
+  /*
+  for(int i = 1; i<=64; i++)
   {
-    subida_flanco(i,SER,RCLK,SRCLK);    
+    Verificacion(i,SER,RCLK,SRCLK);    
   } 
+  */
+  MostrarMatriz(matriz,8,8);
+  letraA(matriz);
+  Serial.println();
+  MostrarMatriz(matriz,8,8);
+  recorrer(matriz);
+  
+  
 }
 
 void loop()
@@ -28,7 +48,7 @@ void loop()
   
 }
 
-void subida_flanco(int numero, int serial ,int reloj,int registro)
+void Verificacion(int numero, int serial ,int reloj,int registro)
 {
   digitalWrite(serial, numero);//se le da el valor para al serial el cual pasara el numero 
   
@@ -38,8 +58,71 @@ void subida_flanco(int numero, int serial ,int reloj,int registro)
   
   digitalWrite(reloj, 0);//falta por explicar
   digitalWrite(reloj, 1);
-  digitalWrite(reloj, 0);
+  digitalWrite(reloj, 0);  
+  //delay(40);
+}
+
+void MostrarMatriz(int m[8][8],int nfilas,int ncolumnas)
+{
+    Serial.print("Imprimiendo matriz inicial: ");Serial.println();
+    for (int x=0;x<nfilas;x++)
+    {
+        for (int y=0;y<ncolumnas;y++)
+        {
+            Serial.print(m[x][y]);
+        }
+        Serial.println();
+    }
+}
+
+void recorrer(int m[8][8])
+{
+  for(int i = 7;i>=0;i-- )
+  {
+    for(int j = 7;j>=0;j-- )
+    {
+      digitalWrite(SER, m[i][j]);//se le da el valor para al serial el cual pasara el numero 
   
-  delay(500);
-  
+      digitalWrite(SRCLK, 0);//falta pro explicar
+      digitalWrite(SRCLK, 1);
+      digitalWrite(SRCLK, 0);
+
+      digitalWrite(RCLK, 0);//falta por explicar
+      digitalWrite(RCLK, 1);
+      digitalWrite(RCLK, 0);
+      
+    }
+    
+  }   
+}
+
+void letraA(int m[8][8])
+{
+    for (int x=0;x<64;x++)
+    {
+        if (x<18)
+        {
+            m[0][x]=1;
+        }
+      	else if(x>21 && x<=25)
+        {
+                m[0][x]=1;
+        }
+      	else if(x>29 && x<=41)
+        {
+            m[0][x]=1;
+    	}
+      	else if(x>45 && x<=49)
+        {
+            m[0][x]=1;
+    	}
+      	else if(x>53 && x<=57)
+        {
+            m[0][x]=1;
+    	}
+      	else if(x>61 && x<=64)
+        {
+            m[0][x]=1;
+    	}
+    }
 }
