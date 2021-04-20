@@ -22,7 +22,9 @@
         \vspace{1.5cm}
             
         \textbf{Dylan Saldarriaga}
+        
          \textbf{Juan Camilo Arboleda}
+         
          \textbf{Santiago Pereira Ramirez}
        
         \vfill
@@ -40,21 +42,243 @@
 
 \tableofcontents
 \newpage
-\section{Sección introductoria}\label{intro}
-en este parcial podremos demostra de las aplicaciones con los integrados, microcontralador y tambien la programacion en c++.
+\section{Planteamiento del problema}\label{intro}
+en este parcial podremos demostrar las aplicaciones con los integrados, microcontrolador y también la programación en c++ y arduino.
 
 \section{Analisis y Propuestas} \label{contenido}
 
 Se debera de utilizar el integrado 74hc595 y un arduino, se debera de llegar a la forma de implentar una matriz de led 8x8 con los materiales anteriormente propuestos. 
 para el planteamiento del problema primero:
 
--- idear una manera de conectar los 64 LEDS y que estos tenga un orden
+-- Idear una manera de conectar los 64 LEDS y que estos tenga un orden matricial
 
---Realizar las diferentes funciones para la buena manipulacion del integrado.
+-- Realizar las diferentes funciones para la buena manipulacion de la matriz.
 
--- realizar el algoritmo que nos permita relizar de una manera eficas patrones, los cuales seran introducidos por el usuario.
+-- Diseñar el algoritmo que nos permita hacer uso de una manera eficas los patrones, los cuales seran introducidos por el usuario e impresos por los leds.
+
+-- Implementación de funciones que permitan el uso de una o mas columnas, igualmente con las diagonales principales o filas
 
 
+\section{Algoritmo implementado} \label{contenido}
+
+const int SER = 2;	//ENTRADA SERIAL
+
+const int RCLK = 4;	//RELOJ REGISTRO DESPLAZAMIENTO
+
+const int SRCLK = 5;  //REGISTRO DE SALIDA
+
+int matriz[8][8]={{"0,0,0,0,0,0,0,0"},{"0,0,0,0,0,0,0,0"},{"0,0,0,0,0,0,0,0"},{"0,0,0,0,0,0,0,0"},{"0,0,0,0,0,0,0,0"},{"0,0,0,0,0,0,0,0"},{0,0,0,0,0,0,0,0"},{"0,0,0,0,0,0,0,0"}};
+
+
+//funcion que recibe 4 variables tipo int, la primera el valor que se le dara a cada led y las siguientes los puertos analogos del arduino
+
+void Verificacion(int numero, int serial ,int reloj,int registro);
+
+//funcion que muestra la matriz
+
+void MostrarMatriz(int m[8][8],int nfilas,int ncolumnas);
+
+void letraA(int m[8][8]);
+
+void recorrer(int m[8][8]);
+
+void setup()
+{
+  Serial.begin(9600);
+  
+  //configuracion de puertos digitales de forma: OUTPUT
+  
+  pinMode(SER, OUTPUT);
+  
+  pinMode(RCLK, OUTPUT);
+  
+  pinMode(SRCLK, OUTPUT);
+  
+  //inicializar la entrada serial y los relojes en bajo
+  
+  digitalWrite(SER, 0);
+  
+  digitalWrite(RCLK, 0);
+  
+  digitalWrite(SRCLK, 0);
+  
+  /*
+  for(int i = 1; i<=64; i++)
+  
+  {
+  
+    Verificacion(i,SER,RCLK,SRCLK);   
+    
+  } 
+  */
+  
+  MostrarMatriz(matriz,8,8);
+  
+  letraA(matriz);
+  
+  Serial.println();
+  
+  MostrarMatriz(matriz,8,8);
+  
+  recorrer(matriz);
+  
+  
+}
+
+void loop()
+{   
+  
+}
+
+void Verificacion(int numero, int serial ,int reloj,int registro)
+
+{
+  digitalWrite(serial, numero);//se le da el valor para al serial el cual pasara el numero 
+  
+  
+  digitalWrite(registro, 0);//falta pro explicar
+  
+  digitalWrite(registro, 1);
+  
+  digitalWrite(registro, 0);
+  
+  digitalWrite(reloj, 0);//falta por explicar
+  
+  digitalWrite(reloj, 1);
+  
+  digitalWrite(reloj, 0);  
+  
+  //delay(40);
+  
+}
+
+void MostrarMatriz(int m[8][8],int nfilas,int ncolumnas)
+{
+
+    Serial.print("Imprimiendo matriz inicial: ");Serial.println();
+    
+    for (int x=0;x<nfilas;x++)
+    
+    {
+    
+        for (int y=0;y<ncolumnas;y++)
+        
+        {
+        
+            Serial.print(m[x][y]);
+        }
+        
+        Serial.println();
+        
+    }
+    
+}
+
+
+void recorrer(int m[8][8])
+
+{
+
+  for(int i = 7;i>=0;i-- )
+  
+  {
+  
+    for(int j = 7;j>=0;j-- )
+    
+    {
+    
+      digitalWrite(SER, m[i][j]);//se le da el valor para al serial el cual pasara el numero 
+  
+      digitalWrite(SRCLK, 0);//falta pro explicar
+      
+      digitalWrite(SRCLK, 1);
+      
+      digitalWrite(SRCLK, 0);
+      
+      digitalWrite(RCLK, 0);//falta por explicar
+      
+      digitalWrite(RCLK, 1);
+      
+      digitalWrite(RCLK, 0);
+      
+    }
+    
+  }   
+  
+}
+
+void letraA(int m[8][8])
+
+{
+    for (int x=0;x<64;x++)
+    
+    {
+    
+        if (x<18)
+        
+        {
+        
+            m[0][x]=1;
+            
+        }
+        
+      	else if(x>21 && x<=25)
+      	
+        {
+        
+                m[0][x]=1;
+                
+        }
+        
+      	else if(x>29 && x<=41)
+      	
+        {
+        
+            m[0][x]=1;
+            
+    	}
+    	
+      	else if(x>45 && x<=49)
+      	
+        {
+        
+            m[0][x]=1;
+            
+    	}
+    	
+      	else if(x>53 && x<=57)
+      	
+        {
+        
+            m[0][x]=1;
+            
+    	}
+    	
+      	else if(x>61 && x<=64)
+      	
+        {
+        
+            m[0][x]=1;
+            
+    	}
+    	
+    }
+    
+}
+
+\section{Problemas de desarrollo que presentó}\label{contenido}
+
+En el transcurso del problema se evidenciaron algunos inconvenientes uno de estos fue
+
+-- Las conecciones de los leds y el uso del integrado 
+
+-- Entender el orden de los leds de tal manera que al realizar el algoridmo se entieran entre si
+
+-- La forma de usar las funciones para imprimir un simbolo
+
+-- Implementacion de los apuntadores y la memoria dinamica en el codigo del problema
+
+\section{Evolución del algoritmo y consideraciones a tener en cuenta en la implementación}\label{contenido}
 
 
 \end{document}
