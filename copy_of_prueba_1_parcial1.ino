@@ -5,8 +5,9 @@ int Array[3] = {2,4,5};
 int **matriz;
 
 //variables diversas para la implementacion
-char fil,column,bol;
-
+char tipo,fil,column,bol;
+char fil_2,column_2;
+  
 int entradas[2];
 int num_columna = 0,auxiliar = 0,opcion = 0;
 
@@ -27,6 +28,15 @@ void recorrer(int **m,int ma[]);
 
 //rellenar columna
 void Columna(int **m,int col);
+
+//rellenar una fila
+void Fila(int **m,int fila);
+
+//imprimir la matriz identidad
+void DiagonalMatriz(int **m);
+
+//imprimir la matriz identidad inversa
+void DiagonalMatrizInversa(int **m);
 
 void setup()
 {
@@ -61,7 +71,12 @@ void setup()
   Verificacion(Array);
   
   MostrarMatriz(matriz,8,8);
-   
+  Serial.println("opcion 1--> rellenar toda una columna ");
+  Serial.println("opcion 2--> rellenar toda una fila ");
+  Serial.println("opcion 3--> rellenar diagonal principal ");
+  Serial.println("opcion 4--> rellenar diagonal principal inversa ");
+  Serial.println("opcion 4--> poner una posicion ");
+  
 }
 
 
@@ -97,26 +112,75 @@ void loop()
     }
     */
   
-  while(Serial.available())
+  if(Serial.available())
   {
-    Serial.print("Ingrese la opcion que desea hacer--> ");
-    opcion = Serial.read();
+    Serial.print("Ingrese la opcion que desea hacer--> ");Serial.println();
+   
+    tipo = Serial.read();
+    opcion = tipo - 48;
     
-    switch(opcion) //donde opción es la variable a comparar
-	{
-      case 1://aqui se ingresara de a columna
-      {
-        num_columna = Serial.read();
-        
-        Columna(matriz,num_columna)        
-      }
-      case2:
-      {
+    if(opcion == 1)
+    {
+      Serial.print("entro a la opcion 1,ingrese el numero de la columna--> ");Serial.println();
+      if(Serial.available())
+      {    
+        column_2 = Serial.read();
+        num_columna = column_2 - 48;
+		Columna(matriz,num_columna); 
+        MostrarMatriz(matriz,8,8);
         Serial.println();
-        Serial.print("esta es la opcion 2");
-        
-      }   
+      }      
     }
+    else if(opcion == 2)
+    {
+      Serial.print("entro a la opcion 2,ingrese el numero de la fila--> ");Serial.println();
+      if(Serial.available())
+      {    
+        fil_2 = Serial.read();
+        num_columna = fil_2 - 48;
+		Fila(matriz,num_columna);
+        MostrarMatriz(matriz,8,8);
+        Serial.println();
+      }      
+    }
+    else if(opcion == 3)
+    {
+      Serial.print("entro a la opcion 3,se ingresara la diagonal principal--> ");Serial.println();
+      void DiagonalMatriz(int **m); 
+      MostrarMatriz(matriz,8,8);
+      Serial.println();
+    }
+    else if(opcion == 4)
+    {
+      Serial.print("entro a la opcion 4,se ingresara la diagonal principal inversa--> ");Serial.println();
+      void DiagonalMatrizInversa(int **m);
+      MostrarMatriz(matriz,8,8);
+      Serial.println();
+    }
+    else if(opcion == 5)
+    {
+      Serial.print("entro a la opcion 5,se ingresara un elemento en el espacio indicado de la matriz--> ");Serial.println();
+      if(Serial.available())
+      {    
+        fil = Serial.read();
+        entradas[0] = fil - 48;
+        if(Serial.available())
+        {    
+          column = Serial.read();
+          entradas[1] = column - 48;
+          CambiarNumMatriz(matriz,entradas[0],entradas[1]);
+          MostrarMatriz(matriz,8,8);
+          Serial.println();
+        } 
+      }      
+    }
+    Serial.println("opcion 1--> rellenar toda una columna ");
+    Serial.println("opcion 2--> rellenar toda una fila ");
+    Serial.println("opcion 3--> rellenar diagonal principal ");
+    Serial.println("opcion 4--> rellenar diagonal principal inversa ");
+    Serial.println("opcion 4--> poner una posicion ");
+    Serial.println();Serial.println();
+ }
   
 }
 
@@ -130,11 +194,10 @@ void Verificacion(int ma[])
     digitalWrite(ma[2], 1);
     digitalWrite(ma[2], 0);
 
-    digitalWrite(ma[1], 0);//pin 4
+    digitalWrite(ma[1], 0);//pin 4 nos da la opcion de registrar el valor
     digitalWrite(ma[1], 1);
     digitalWrite(ma[1], 0);    
   }
-
 }
 
 void MostrarMatriz(int **m,int nfilas,int ncolumnas)
@@ -193,10 +256,33 @@ void Columna(int **m,int col)
     {
         for(int j=0;j<=8;j++)
         {
-            if (j==col)
+            if (j==col-1)
             {
                 *(*(m+i)+j)=1;
             }
         }
+    }
+}
+
+void Fila(int **m,int fila){
+
+    for(int i=0;i<=8;i++)
+    {
+        m[fila-1][i]=1;
+    }
+}
+
+void DiagonalMatriz(int **m)
+{   
+  	for(int i = 0;i<8;i++)
+    {
+        *(*(m+i)+i)=1;
+    }
+}
+
+void DiagonalMatrizInversa(int **m){
+    for (int i = 0,j = 7;i<8;i++)
+    {
+        *(*(m+i)+(j-i))=1;
     }
 }
