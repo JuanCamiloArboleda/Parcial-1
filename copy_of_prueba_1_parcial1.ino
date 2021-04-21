@@ -1,8 +1,8 @@
 //Arreglo donde posicion--> 0 = entrada serial(SER); 1 = reloj registro desplazamiento(RCLK); 2 = registro de salida(SRCLK);
 int Array[3] = {2,4,5};
 
-//matriz dinamica
-int **matriz,*matriz_2;
+//matriz y arreglo dinamica
+int **matriz,*Array_dinamico;
 
 //variables diversas para la implementacion
 char tipo,fil,column,bol,bol_2;
@@ -35,8 +35,6 @@ void ParteFila(int **m,int col1,int col2, int col);
 //funcion segmentacion de diagonales
 void segmentacionDiagonales(int **m,int fila_1, int columna_1, int fila_2, int columna_2);
 
-//funcion para inicializar matriz de n patrones
-void inicializacion_matriz8*n(int **m,int n)
 
 void setup()
 {
@@ -44,48 +42,41 @@ void setup()
   
   
   Serial.println("Escoja si sera un solo patron o sera n patrones--> ");
+  
+  delay(5000);
   if(Serial.available())
   {
     bol = Serial.read();
     num_patrones_2 = bol-48;
     if(num_patrones_2 >1)
     {
-      matriz = new int*[8];//reservando memoriapara la matriz
-
-      for(int i = 0; i<8; i++)
-      {
-        matriz[i] = new int[8];   //reservando la memoria
-      }
-      
-      for(int i = 0; i<8;i++)//rellenando la matriz de ceros
-      {
-        for(int j = 0; j<8;j++)
-        {
-          *(*(matriz+i)+j) = 0;      
-        }
-      }
-            
+      	Serial.println("escogio n patrones--> ");
+      	Array_dinamico = new int[8*(8*num_patrones_2)];//reservando memoria para el array dinamico
+      	for(int i = 0; i< 8*8*num_patrones_2;i++)
+    	{
+          *(Array_dinamico+i) = 0;
+    	}            
     }
-    else
+    else if(num_patrones_2 == 1)
     {
-      matriz = new int*[8];//reservando memoriapara la matriz
-  
-      for(int i = 0; i<8; i++)
-      {
-        matriz[i] = new int[8];   //reservando la memoria 
-      }
-
-      for(int i = 0; i<8;i++)//rellenando la matriz de ceros
-      {
-        for(int j = 0; j<8;j++)
-        {
-          *(*(matriz+i)+j) = 0;      
-        }
-      }
-    }
-    
+      Serial.println("escogio solo un patron--> ");
+    }    
   }
- 
+  
+  matriz = new int*[8];//reservando memoriapara la el arreglo dinamico
+
+  for(int i = 0; i<8; i++)
+  {
+  	matriz[i] = new int[8];   //reservando la memoria
+  }
+      
+  for(int i = 0; i<8;i++)//rellenando la matriz de ceros
+  {
+  	for(int j = 0; j<8;j++)
+    {
+     	*(*(matriz+i)+j) = 0;      
+    }
+  } 
    
   //configuracion de puertos digitales de forma: OUTPUT
   pinMode(Array[0], OUTPUT);
@@ -115,125 +106,140 @@ void setup()
 
 void loop()
 {    
-  if(Serial.available())
+  
+  if(num_patrones_2 == 1)
   {
-    Serial.print("Ingrese la opcion que desea hacer--> ");Serial.println();
-   
-    tipo = Serial.read();
-    opcion = tipo - 48;
-    if(opcion == 1)
-    {
-      Serial.print("entro a la opcion 1");Serial.println();
-        if(Serial.available())
+    if(Serial.available())
+      {
+        Serial.print("Ingrese la opcion que desea hacer--> ");Serial.println();
+
+        tipo = Serial.read();
+        opcion = tipo - 48;
+        if(opcion == 1)
         {
-          Serial.print("si entro");Serial.println();
-          fil = Serial.read();
-          entradas[0] = fil-48;
-          if(Serial.available())
-          {
-            Serial.print("si entro");Serial.println();
-            column = Serial.read();
-          	entradas[1] = column - 48;
+          Serial.print("entro a la opcion 1");Serial.println();
             if(Serial.available())
             {
               Serial.print("si entro");Serial.println();
-              bol = Serial.read();
-              entradas[2] = bol - 48;
-              ParteFila(matriz,entradas[1],entradas[2],entradas[0]);
-              MostrarMatriz(matriz,8,8);
-              Serial.println();
-            }     
-          }
-        }      
-    }
-    else if(opcion == 2)
-    {   
-        Serial.print("entro a la opcion 2 ");Serial.println();
-        if(Serial.available())
-        {
-          Serial.print("si entro");Serial.println();
-          fil = Serial.read();
-          entradas[0] = fil-48;
-          if(Serial.available())
-          {
-            Serial.print("si entro");Serial.println();
-            column = Serial.read();
-          	entradas[1] = column - 48;
-            if(Serial.available())
-            {
-              Serial.print("si entro");Serial.println();
-              bol = Serial.read();
-              entradas[2] = bol - 48;
-              ParteCol(matriz,entradas[1],entradas[2],entradas[0]);
-              MostrarMatriz(matriz,8,8);
-              Serial.println();
-            }     
-          }
-        }     	
-    }   
-    else if(opcion == 3)
-    {   
-        Serial.print("entro a la opcion 3 ");Serial.println();
-        if(Serial.available())
-        {
-          Serial.print("si entro");Serial.println();
-          fil = Serial.read();
-          entradas[0] = fil-48;
-          if(Serial.available())
-          {
-            Serial.print("si entro");Serial.println();
-            column = Serial.read();
-          	entradas[1] = column - 48;
-            if(Serial.available())
-            {
-              Serial.print("si entro");Serial.println();
-              bol = Serial.read();
-              entradas[2] = bol - 48;
+              fil = Serial.read();
+              entradas[0] = fil-48;
               if(Serial.available())
               {
                 Serial.print("si entro");Serial.println();
-                bol_2 = Serial.read();
-                entradas[3] = bol_2 - 48;
-                segmentacionDiagonales(matriz,entradas[0], entradas[1],entradas[2],entradas[3]); 
-                MostrarMatriz(matriz,8,8);
-          		Serial.println();
+                column = Serial.read();
+                entradas[1] = column - 48;
+                if(Serial.available())
+                {
+                  Serial.print("si entro");Serial.println();
+                  bol = Serial.read();
+                  entradas[2] = bol - 48;
+                  ParteFila(matriz,entradas[1],entradas[2],entradas[0]);
+                  MostrarMatriz(matriz,8,8);
+                  Serial.println();
+                }     
               }
-            }     
-          }
-        }     	
-    }   
-    else if(opcion == 4)
+            }      
+        }
+        else if(opcion == 2)
+        {   
+            Serial.print("entro a la opcion 2 ");Serial.println();
+            if(Serial.available())
+            {
+              Serial.print("si entro");Serial.println();
+              fil = Serial.read();
+              entradas[0] = fil-48;
+              if(Serial.available())
+              {
+                Serial.print("si entro");Serial.println();
+                column = Serial.read();
+                entradas[1] = column - 48;
+                if(Serial.available())
+                {
+                  Serial.print("si entro");Serial.println();
+                  bol = Serial.read();
+                  entradas[2] = bol - 48;
+                  ParteCol(matriz,entradas[1],entradas[2],entradas[0]);
+                  MostrarMatriz(matriz,8,8);
+                  Serial.println();
+                }     
+              }
+            }     	
+        }   
+        else if(opcion == 3)
+        {   
+            Serial.print("entro a la opcion 3 ");Serial.println();
+            if(Serial.available())
+            {
+              Serial.print("si entro");Serial.println();
+              fil = Serial.read();
+              entradas[0] = fil-48;
+              if(Serial.available())
+              {
+                Serial.print("si entro");Serial.println();
+                column = Serial.read();
+                entradas[1] = column - 48;
+                if(Serial.available())
+                {
+                  Serial.print("si entro");Serial.println();
+                  bol = Serial.read();
+                  entradas[2] = bol - 48;
+                  if(Serial.available())
+                  {
+                    Serial.print("si entro");Serial.println();
+                    bol_2 = Serial.read();
+                    entradas[3] = bol_2 - 48;
+                    segmentacionDiagonales(matriz,entradas[0], entradas[1],entradas[2],entradas[3]); 
+                    MostrarMatriz(matriz,8,8);
+                    Serial.println();
+                  }
+                }     
+              }
+            }     	
+        }   
+        else if(opcion == 4)
+        {
+          Serial.print("entro a la opcion 4,se ingresara un elemento en el espacio indicado de la matriz--> ");Serial.println();
+          if(Serial.available())
+          {   
+            Serial.print("si entro");Serial.println();
+            fil = Serial.read();
+            entradas[0] = fil - 48;
+            if(Serial.available())
+            {  
+              Serial.print("si entro");Serial.println();
+              column = Serial.read();
+              entradas[1] = column - 48;
+              CambiarNumMatriz(matriz,entradas[0],entradas[1]);
+              MostrarMatriz(matriz,8,8);
+              Serial.println();
+            } 
+          } 
+        }
+        else if(opcion == 5)
+        {
+          Serial.print("entro--> entro--> ");
+            imagen(matriz,Array);
+            MostrarMatriz(matriz,8,8);       
+        }
+      Serial.println("opcion 1--> segmentacion fila ");
+      Serial.println("opcion 2--> segmentacion columna ");
+      Serial.println("opcion 3--> segmentacion de una diagonal ");
+      Serial.println("opcion 4--> poner una posicion ");
+      Serial.println("opcion 5--> mostrar en matriz de led ");  
+      Serial.println(); 
+     }  
+  }
+  
+  else
+  {
+    if(Serial.available())
     {
-      Serial.print("entro a la opcion 4,se ingresara un elemento en el espacio indicado de la matriz--> ");Serial.println();
-      if(Serial.available())
-      {   
-        Serial.print("si entro");Serial.println();
-        fil = Serial.read();
-        entradas[0] = fil - 48;
-        if(Serial.available())
-        {  
-          Serial.print("si entro");Serial.println();
-          column = Serial.read();
-          entradas[1] = column - 48;
-          CambiarNumMatriz(matriz,entradas[0],entradas[1]);
-          MostrarMatriz(matriz,8,8);
-          Serial.println();
-        } 
-      } 
-    }
-    else if(opcion == 5)
-    {
-      Serial.print("entro--> entro--> ");
-        imagen(matriz,Array);
-        MostrarMatriz(matriz,8,8);       
-    }
-  Serial.println("opcion 1--> segmentacion fila ");
-  Serial.println("opcion 2--> segmentacion columna ");
-  Serial.println("opcion 4--> segmentacion de una diagonal ");
-  Serial.println("opcion 3--> poner una posicion ");
-  Serial.println("opcion 4--> mostrar en matriz de led ");  
-  Serial.println(); 
- }
+      Serial.println("diversos patrones--> ");      
+    }      
+  }
+  
+  
+  
   
 }
 
