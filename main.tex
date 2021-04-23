@@ -45,17 +45,18 @@
 \section{Planteamiento del problema}\label{intro}
 en este parcial podremos demostrar las aplicaciones con los integrados, microcontrolador y también la programación en c++ y arduino.\\
 
-Como inicio del planteamiento aprendimos un poco mas sobre como usar integrado 74hc595n con el fin de iniciar su implementación, dandonos cuenta que este tiene la opción de usarse en modo "cascada".\\
+Como inicio del planteamiento aprendimos un poco mas sobre como usar integrado 74hc595 con el fin de iniciar su implementación, dandonos cuenta que este tiene la opción de usarse en modo "cascada".\\
 
-Al implementar el modo cascada logramos usar los 64 leds con 8 integrados y 3 salidas lógicas del arduino; así dimos inicio a la parte de programación donde buscamos en primero lugar el funcionamiento de los 64 leds\\
+Al implementar el modo cascada logramos usar los 64 leds con 8 integrados y 3 salidas lógicas del arduino; así dimos inicio a la parte de programación donde buscamos en primer lugar el funcionamiento de los 64 leds\\
 
-Por medio de ciclos for recorremos la matriz 8x8, y dependiendo si hay un 0 o 1 en la matriz, el led se mantiene apagado o se enciende respectivamente.
+Por medio de ciclos for recorremos la matriz 8x8, y dependiendo si hay un 0 o 1 en la matriz, este valor se le dara al pin correspondiente integrado, despues se dara un flanco de subida corres pondiente al pin en el integrado para desplazar el valor, acto seguido se da un flanco de subida para registrar el valor.
 
-Y le mando un pulso al reloj de registro de salida, para que almacene el tiempo entre cada iteraccion, dando inicio a la implementacion de las diferentes funciones con el fin lograr los objetivos propuestos.
+Y le mando un pulso al reloj de registro de salida, para que almacene el tiempo entre cada iteracion, dando inicio a la implementacion de las diferentes funciones con el fin lograr los objetivos propuestos.
 
 \section{Analisis y Propuestas} \label{contenido}
 
-Se debera de utilizar el integrado 74hc595 y un arduino, se debera de llegar a la forma de implentar una matriz de led 8x8 con los materiales anteriormente propuestos. 
+Se debera de utilizar el integrado 74hc595 y un arduino,con los cuales se debe llegar a la forma de implentar una matriz de led 8x8 con los materiales anteriormente propuestos.
+
 para el planteamiento del problema primero:  \\
 
 -- Idear una manera de conectar los 64 LEDS y que estos tenga un orden matricial\\
@@ -64,12 +65,30 @@ para el planteamiento del problema primero:  \\
 
 -- Diseñar el algoritmo que nos permita hacer uso de una manera eficas los patrones, los cuales seran introducidos por el usuario e impresos por los leds. \\
 
--- Implementación de funciones que permitan el uso de una o mas columnas, igualmente con las diagonales principales o filas\\
+-- Implementación de funciones que permitan el uso de una o mas columnas, igualmente con las diagonales o filas\\
 
--- Manipulacion de arreglos, matrices y punteros para la indexación de datos y la implementacion de los algoritmos. \\
+-- Manipulacion de arreglos, matrices y punteros para la segmentación de datos y la implementacion de los algoritmos. \\
 
 
 \section{Funciones Y Algoritmos Implementados.} \label{contenido}
+
+//funcion que permite transportar la informacion de arreglo dinamico a la matriz de leds\\
+-- void publik(int *arr,int num);\\
+Funcion que no retorna nada, recibe como parametros un arreglo dinamico y un numero entero, nos permitira ver los patrones ingresados por el usuario en la matriz de leds 8*8.\\
+
+
+// funcion que reemplaza la matriz dinamica en un arreglo dinamico\\
+-- void reemplazar(int **ma,int *ma2,int constante);\\
+Funcion que no retorna nada, recibe como parametros el espacio de memoria de la matriz dos, recibe como parametro el primer espacio de la matriz dinamica (ma), la constante hace que sea posible la manipulacion de la matriz cada 64 espacios hasta que alcance el numero de matrices 
+
+//funcion que muestra el menu\\
+-- void Menu();\\
+funcion que no retorna nada, esta nos permite manejar la matriz\\
+
+//funcion que inicializa las matrices\\
+-- void inicializarmatriznormal(int **ma);\\
+funcion que no retorna nada, recibe como parametro el primer espacio de la matriz dinamica (ma), la funcion itera en todos los espacios de memoria de la matriz dinamica y reemplaza todos los datos en cero. \\
+
 
 //funcion que muestra la matriz\\
 --  void MostrarMatriz(int **m,int nfilas,int ncolumnas);\\
@@ -104,10 +123,39 @@ funcion encargada de segmentar una diagonal ingresada desde fila1,columna1 hasta
 -- void Verificacion(int ma[]) \\
 funcion encargada de comprobar el funcionamiento de todos los leds, encendiendolos. Esta funcion no retorna nada y recibe una matriz. \\
 
+Pedir al usuario el numero de matrices\\
+
+Inicializar las matrices\\
+
+Si el numero de matrices es mayor a uno:\\
+
+---- Entonces inicializar un arreglo dinamico\\
+
+Inicializar los pines\\
+
+Poner los pines en bajo\\
+
+Mostrar la matriz en [0]\\
+
+Limpiar la matriz\\
+
+Si El numero de matrices es igual a 1 entonces\\
+
+---- Mostrara el menu y se podra ingresar valores para la manipilaxion de la matriz \\
+
+Sino\\
+
+---- Mostrar el menu e ingresar los valores\\
+
+---- si los valores contienen la letra 'i' entonces\\
+
+-------Se realizara la segmentacion de manera secuencial\\
+
+----Sino se ingreso la letra 'o', y se paso al siguiente patron o se termino el programa imprimiendo la secuencia de patrones
 
 \section{Problemas de desarrollo que presentó}\label{contenido}
 
-En el transcurso del problema se evidenciaron algunos inconvenientes uno de estos fue
+En el transcurso del problema se evidenciaron algunos inconvenientes: \\
 
 -- Las conexiones de los leds y el uso del integrado 
 
@@ -115,31 +163,20 @@ En el transcurso del problema se evidenciaron algunos inconvenientes uno de esto
 
 -- Hallar la forma con la cual pudiesemos modificar la matriz para mostrar un patron deseado el cual será ingresado por el usuario.
 
--- La manipulacion del puerto serial del arduino. El arduino.
+-- La manipulacion del puerto serial del arduino.
 
 -- Trasladar la sintaxis del Qt al arduino de tal manera que el codigo quedase funcional y reconociese los valores ingresados.
 
 -- Implementacion de los apuntadores y la memoria dinamica en el codigo del problema.
 
---La matriz (8n)x(8) 
+\section{Consideraciones y Evolución}\label{contenido}
 
-\section{Evolución del algoritmo y consideraciones a tener en cuenta en la implementación}\label{contenido}
+-- Siempre se vio desde el punto de vista de el usario para que tuviera una visualizacion mas amplia\\
 
-for(int i = 7;i>=0;i--) \\
-  {
-    for(int j = 7;j>=0;j--) \\
-    {
-      digitalWrite(ma[0], *(*(m+i)+j)); //buscamos en la matriz ma el valor el cual le pasaremos al serial.
-donde i es igual a las filas y j las columnas.\\
-      //se le da el valor para al serial el cual pasara el numero \\
-  
-      digitalWrite(ma[2], 0); \\
-      digitalWrite(ma[2], 1);\\
-      digitalWrite(ma[2], 0);\\
+-- Al comenzar a trabajar en este proyecto, aprendimos sobre el uso de las salidas logicas del arduino y el uso del integrado 74hc595\\
 
-      digitalWrite(ma[1], 0);\\
-      digitalWrite(ma[1], 1);\\
-      digitalWrite(ma[1], 0);  \\    
-    }    \\
-  }   \\
+-- La buena conexión y lógica entre funciones,  controladores de flujo y los diversos tipos de variables\\
+
+-- La buena utilizacion del QT y el lenguaje C++ para la realizacion de las diversas funciones a implementar y la buena colaboración entre los integrantes de equipo para un desarrollo constante de estas.
+
 \end{document}
